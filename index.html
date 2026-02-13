@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Page</title>
+
+<!-- Inter Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #6b5b95, #9a8cff);
+  transition: background 0.8s ease;
+  overflow: hidden;
+}
+
+.container {
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(14px);
+  border-radius: 22px;
+  padding: 40px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  color: white;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+  transition: all 0.8s ease;
+}
+
+h1 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+p {
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+button {
+  margin: 15px 10px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.yes {
+  background: #00e5a8;
+  color: #003b2f;
+}
+
+.no {
+  background: #ff4d6d;
+  color: white;
+  position: relative;
+}
+
+.fade {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hidden {
+  display: none;
+}
+
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: red;
+  animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="card">
+
+  <!-- 404 SCREEN -->
+  <div id="screen404">
+    <h1>404</h1>
+    <p>Page Not Found 💔</p>
+    <button class="yes" onclick="showValentine()">Refresh</button>
+  </div>
+
+  <!-- VALENTINE SCREEN -->
+  <div id="valentine" class="hidden">
+    <h1>Will you be my Valentine? 💖</h1>
+    <button class="yes" onclick="yesClicked()">YES</button>
+    <button class="no" id="noBtn" onclick="noClicked()">NO</button>
+    <p id="emoji">💔</p>
+  </div>
+
+  <!-- YES MESSAGE -->
+  <div id="message" class="hidden">
+    <p>
+      By clicking YES you agree to:<br><br>
+      💕 Unlimited cuddles<br>
+      😜 Lifetime supply of bad puns<br>
+      🍕 Mutual pizza stealing rights<br><br>
+      Effective immediately! 🚀
+    </p>
+  </div>
+
+</div>
+
+<script>
+let noClicks = 0;
+
+function showValentine() {
+  document.getElementById('screen404').classList.add('hidden');
+  document.getElementById('valentine').classList.remove('hidden');
+}
+
+function noClicked() {
+  noClicks++;
+  const btn = document.getElementById('noBtn');
+  const x = Math.random() * (window.innerWidth - 120);
+  const y = Math.random() * (window.innerHeight - 60);
+  btn.style.position = 'fixed';
+  btn.style.left = x + 'px';
+  btn.style.top = y + 'px';
+
+  document.body.style.background =
+    `linear-gradient(135deg, hsl(${Math.random()*360},70%,60%), hsl(${Math.random()*360},70%,70%))`;
+
+  if (noClicks >= 2) {
+    document.getElementById('emoji').textContent = '😭';
+  }
+}
+
+function yesClicked() {
+  document.querySelectorAll('button').forEach(btn => btn.classList.add('fade'));
+
+  setTimeout(() => {
+    document.getElementById('valentine').classList.add('hidden');
+    document.getElementById('message').classList.remove('hidden');
+  }, 1000);
+
+  launchConfetti();
+}
+
+function launchConfetti() {
+  const duration = 5000;
+  const end = Date.now() + duration;
+
+  const interval = setInterval(() => {
+    if (Date.now() > end) {
+      clearInterval(interval);
+      return;
+    }
+
+    const conf = document.createElement('div');
+    conf.className = 'confetti';
+    conf.style.left = Math.random() * window.innerWidth + 'px';
+    conf.style.background = `hsl(${Math.random()*360},80%,60%)`;
+    document.body.appendChild(conf);
+
+    setTimeout(() => conf.remove(), 3000);
+  }, 100);
+}
+</script>
+
+</body>
+</html>
